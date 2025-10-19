@@ -1,10 +1,20 @@
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 """ desde donde arrancará mi proyecto es lo que indica el ('/') """
-@app.route('/')
-def home():
-    return "Hola mundo de Debi"
+@app.route('/index')
+def index():
+    titulo = "Pagina de Inicio"
+    listado = ['Python', 'Flask', "Jinja2", "Html", "'CSS"]
+    return render_template('index.html', titulo=titulo, listado=listado)
+
+@app.route('/calculos')
+def calculos():
+    return render_template('calculos.html')
+
+@app.route('/distancia')
+def distancia():
+     return render_template('distancia.html')
 
 @app.route('/hola')
 def about():
@@ -38,6 +48,22 @@ def func1(n1, n2):
 @app.route('/default/string:dft>')
 def func2(dft="sss"):
     return "El valor de dft es: "+dft
+
+@app.route('/prueba')
+def func4():
+    return '''
+
+    <html>
+        <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+            <h1>Pagina de prueba </h1>
+        </head>
+        <body>
+            <h1>Holaaaaa</h1>
+            <p>Esta pagina es para probar el retorno</p>
+        </body>
+    </html>
+'''
 
 """ crear sistema de arranque del proyecto """
 if __name__ == '__main__':
