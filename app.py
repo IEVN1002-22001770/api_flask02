@@ -1,4 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+import math
+import forms
 
 app = Flask(__name__)
 """ desde donde arrancará mi proyecto es lo que indica el ('/') """
@@ -8,13 +10,58 @@ def index():
     listado = ['Python', 'Flask', "Jinja2", "Html", "'CSS"]
     return render_template('index.html', titulo=titulo, listado=listado)
 
-@app.route('/calculos')
+@app.route('/calculos', methods=['GET', 'POST'])
 def calculos():
-    return render_template('calculos.html')
+    
+    if request.method == 'POST':
+        numero1 = request.form['numero1']
+        numero2 = request.form['numero2']
+        opera = request.form['operacion']
+        if opera == 'suma':
+            res = int(numero1) + int(numero2)
+        if opera == 'resta':
+            res = int(numero1) - int(numero2)
+        if opera == 'multiplicacion':
+            res = int(numero1) * int(numero2)
+        if opera == 'division':
+            res = int(numero1) / int(numero2)
+        return render_template('calculos.html', res=res, numero1=numero1, numero2=numero2)
+    return render_template('calculos.html') 
 
-@app.route('/distancia')
+@app.route('/distancia', methods=['GET', 'POST'])
 def distancia():
-     return render_template('distancia.html')
+      if request.method == 'POST':
+        x1 = request.form['x1']
+        y1 = request.form['y1']
+        x2 = request.form['x2']
+        y2 = request.form['y2']
+
+        num1 = int(x2) - int(x1);
+        num2 = int(y2) - int(y1);
+
+
+        opera = (math.pow(num1, 2) + math.pow(num2, 2));
+        res = math.sqrt(opera);
+
+        return render_template('distancia.html', res=res, x1=x1, y1=y1, x2=x2, y2=y2)
+      return render_template('distancia.html')
+
+@app.route('/Alumnos', methods=['GET', 'POST'])
+def alumnos():
+    matri = 0
+    nombre = ''
+    apellido = ''
+    email = ''
+
+    alumno_clas = forms.UserForm(request.form)
+
+    if request.method == 'POST' :
+        matri = alumno_clas.matricula.data
+        nombre = alumno_clas.nombre.data
+        apellido = alumno_clas.apellido.data
+        email = alumno_clas.correo.data
+
+    return render_template('Alumnos.html', form=alumno_clas, matri=matri, nombre=nombre, apellido=apellido, email=email)
 
 @app.route('/hola')
 def about():

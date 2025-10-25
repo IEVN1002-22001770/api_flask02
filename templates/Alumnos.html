@@ -1,0 +1,16 @@
+{% extends "layout.html"%}
+    {% block container %}
+    {% import "_macros.html" as macro %}
+
+    <form action="" method="POST">
+        {{macro.camposNuevos(form.matricula)}}
+        {{macro.camposNuevos(form.nombre)}}
+        {{macro.camposNuevos(form.apellido)}}
+        {{macro.camposNuevos(form.correo)}}
+        
+        <input type="submit" value="Guardar" class="btn btn-primary">
+
+    </form>
+
+
+{% endblock %}
