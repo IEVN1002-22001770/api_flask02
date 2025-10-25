@@ -39,23 +39,22 @@ def distancia():
         num1 = int(x2) - int(x1);
         num2 = int(y2) - int(y1);
 
-
         opera = (math.pow(num1, 2) + math.pow(num2, 2));
-        res = math.sqrt(opera);
+        res = math.sqrt(opera); 
 
         return render_template('distancia.html', res=res, x1=x1, y1=y1, x2=x2, y2=y2)
       return render_template('distancia.html')
 
 @app.route('/Alumnos', methods=['GET', 'POST'])
 def alumnos():
-    matri = 0
-    nombre = ''
-    apellido = ''
-    email = ''
+    matri=0
+    nombre=''
+    apellido=''
+    email=''
 
     alumno_clas = forms.UserForm(request.form)
 
-    if request.method == 'POST' :
+    if request.method == 'POST' and alumno_clas.validate() :
         matri = alumno_clas.matricula.data
         nombre = alumno_clas.nombre.data
         apellido = alumno_clas.apellido.data
