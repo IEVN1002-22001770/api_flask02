@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request
+from flask import make_response, jsonify, json
+from datetime import datetime
 import math
 import forms
 
@@ -47,20 +49,54 @@ def distancia():
 
 @app.route('/Alumnos', methods=['GET', 'POST'])
 def alumnos():
-    matri=0
-    nombre=''
-    apellido=''
+    mat=0
+    nom=''
+    ape=''
     email=''
+    tem=[]
+    estudiantes=[]
+    datos=[]
 
     alumno_clas = forms.UserForm(request.form)
-
     if request.method == 'POST' and alumno_clas.validate() :
-        matri = alumno_clas.matricula.data
-        nombre = alumno_clas.nombre.data
-        apellido = alumno_clas.apellido.data
+        if request.form.get("btnElimina")=='eliminar':
+            response = make_response(render_template('Alumnos.html',))
+            response.delete_cookie('usuario')
+
+        mat = alumno_clas.matricula.data
+        nom = alumno_clas.nombre.data
+        ape = alumno_clas.apellido.data
         email = alumno_clas.correo.data
 
-    return render_template('Alumnos.html', form=alumno_clas, matri=matri, nombre=nombre, apellido=apellido, email=email)
+        datos={'matricula':mat,'nombre':nom.rstrip(),
+               'apellido':ape.rstrip(),'email':email.rstrip()}  
+        data_str = request.cookies.get("usuario")
+        if not data_str:
+             return "No hay cookie guardada", 404
+        #estudiantes = json.loads(data_str)
+        #estudiantes.append(datos)  
+    response=make_response(render_template('Alumnos.html',
+            form=alumno_clas, mat=mat, nom=nom, apell=ape, email=email))
+    
+    if request.method!= 'GET':
+        response.set_cookie('usuario', json.dumps(estudiantes))
+
+    return response
+
+
+@app.route("/get_cookies    ")
+def get_cookie():
+     
+    data_str = request.cookies.get("usuario")
+    if not data_str:
+        return "No hay cookie guardada", 404
+ 
+    estudiantes = json.loads(data_str)
+ 
+    return jsonify(estudiantes)
+
+#----------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/hola')
 def about():
@@ -114,3 +150,5 @@ def func4():
 """ crear sistema de arranque del proyecto """
 if __name__ == '__main__':
     app.run(debug=True)
+
+    
